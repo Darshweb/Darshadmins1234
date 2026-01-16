@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Darsh Devs | Secure Admin v2.0</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+  <style>
+    /* ================================
+       Theme variables
+       ================================ */
+    :root{
+      --bg-dark: #060d17;
+      --card-bg: #0f1b2a;
+      --accent: #64ffda;
+      --muted: #8892b0;
+      --heading: #e6f1ff;
+      --danger: #ff6b6b;
+      --warning: #f1c40f;
+      --glass: rgba(16,28,44,0.55);
+      --radius-lg: 16px;
+      --radius-md: 10px;
+      --shadow-1: 0 8px 30px rgba(2,6,23,0.6);
+      --max-width: 1200px;
+      --ease: cubic-bezier(.2,.9,.3,1);
+    }
+
+    /* Reset */
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%}
+    body{
+      font-family: Inter, 'Segoe UI', Roboto, system-ui, -apple-system, 'Helvetica Neue', Arial;
+      background: linear-gradient(180deg, #071022 0%, var(--bg-dark) 100%);
+      color:var(--muted);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.45;
+      overflow-x:hidden;
+    }
+
+    /* Page layout */
+    .page{display:flex;min-height:100vh;align-items:stretch}
+
+    /* Sidebar */
+    .sidebar{
+      width:260px;background:linear-gradient(180deg, rgba(15,27,42,0.9), var(--card-bg));
+      border-right:1px solid rgba(255,255,255,0.03);padding:28px;position:sticky;top:0;height:100vh;flex-shrink:0;
+      box-shadow:var(--shadow-1);
+    }
+    .brand{font-weight:700;color:var(--accent);letter-spacing:-1px;font-size:20px}
+    .brand span{color:#fff}
+    .meta{font-size:12px;color:var(--muted);margin-top:6px}
+    nav{margin-top:28px}
+    .nav-item{display:flex;align-items:center;gap:12px;padding:12px;border-radius:10px;color:var(--muted);cursor:pointer}
+    .nav-item.active{background:rgba(100,255,218,0.05);color:var(--accent)}
+
+    /* Main */
+    .main{flex:1;padding:36px;max-width:calc(var(--max-width) + 320px);margin:0 auto}
+    .controls{display:flex;gap:16px;align-items:center;justify-content:space-between;margin-bottom:22px}
+
+    /* Stats grid */
+    .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:24px}
+    .card{background:var(--card-bg);padding:18px;border-radius:var(--radius-md);border:1px solid rgba(255,255,255,0.02)}
+    .card h3{color:var(--heading);margin-top:8px;font-size:1.5rem}
+    .card p{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+
+    /* Search + add */
+    .search-bar{display:inline-flex;align-items:center;gap:10px;background:var(--card-bg);padding:10px 14px;border-radius:999px;border:1px solid rgba(255,255,255,0.03);min-width:260px}
+    .search-bar input{background:transparent;border:0;outline:none;color:var(--heading);font-size:14px}
+    .btn{padding:10px 14px;border-radius:10px;border:0;font-weight:700;cursor:pointer}
+    .btn-primary{background:var(--accent);color:var(--bg-dark)}
+    .btn-ghost{background:transparent;color:var(--muted);border:1px solid rgba(255,255,255,0.03)}
+
+    /* Table */
+    .table-wrap{background:linear-gradient(180deg, rgba(14,23,36,0.6), var(--card-bg));border-radius:12px;overflow:hidden;box-shadow:var(--shadow-1)}
+    table{width:100%;border-collapse:collapse}
+    thead th{background:#15304b;color:var(--accent);font-weight:700;padding:16px;text-align:left;font-size:13px}
+    tbody td{padding:14px;border-bottom:1px solid rgba(255,255,255,0.03);color:var(--heading);vertical-align:middle}
+    tr:hover td{background:rgba(100,255,218,0.02)}
+
+    .actions button{background:none;border:0;padding:6px;border-radius:6px;cursor:pointer}
+    .plan-tag{display:inline-block;padding:6px 10px;border-radius:999px;font-size:12px;font-weight:700}
+    .plan-Ultra{background:rgba(100,255,218,0.08);color:var(--accent);border:1px solid rgba(100,255,218,0.12)}
+    .plan-Advanced{background:rgba(241,196,15,0.08);color:var(--warning);border:1px solid rgba(241,196,15,0.12)}
+    .plan-Basic{background:rgba(136,146,176,0.06);color:var(--muted);border:1px solid rgba(136,146,176,0.06)}
+
+    .pulse-shutdown{color:var(--danger);animation:pulse 1.8s infinite}
+    @keyframes pulse{0%{opacity:1}50%{opacity:.5}100%{opacity:1}}
+
+    /* Modal */
+    .modal{position:fixed;inset:0;background:rgba(2,6,23,0.6);display:none;align-items:center;justify-content:center;z-index:2000;padding:20px}
+    .modal-body{width:100%;max-width:720px;background:var(--card-bg);border-radius:12px;padding:26px;border:1px solid rgba(100,255,218,0.06)}
+    .form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+    label{display:block;margin-bottom:6px;color:var(--accent);font-size:13px}
+    input,select,textarea{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);background:#06101a;color:var(--heading);outline:none}
+
+    .modal-footer{display:flex;justify-content:flex-end;gap:12px;margin-top:18px}
+
+    /* Lock screen */
+    #lockScreen{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 30% 20%, #0b2036 0%, rgba(6,13,23,0.95) 60%);backdrop-filter:blur(6px);z-index:10000}
+    .lock-box{background:linear-gradient(180deg, rgba(13,25,38,0.6), rgba(15,27,42,0.9));padding:32px;border-radius:14px;width:360px;text-align:center;border:1px solid rgba(100,255,218,0.06)}
+    .pin-field{width:100%;padding:12px;border-radius:10px;background:#06101a;border:1px solid rgba(255,255,255,0.03);color:var(--accent);font-size:1.4rem;letter-spacing:10px;text-align:center}
+    .lock-help{font-size:13px;color:var(--muted);margin-top:6px}
+
+    /* Utilities */
+    .hidden{display:none}
+    .muted{color:var(--muted)}
+
+    /* Responsive */
+    @media(max-width:900px){
+      .stats-grid{grid-template-columns:repeat(2,1fr)}
+      .sidebar{display:none}
+      .main{padding:20px}
+    }
+    @media(max-width:560px){
+      .stats-grid{grid-template-columns:1fr}
+      .controls{flex-direction:column;align-items:stretch;gap:12px}
+      .form-grid{grid-template-columns:1fr}
+      thead th{font-size:12px}
+    }
+
+    /* Focus states for accessibility */
+    a:focus,button:focus,input:focus,select:focus{outline:3px solid rgba(100,255,218,0.12);outline-offset:2px}
+
+  </style>
+</head>
+<body>
+
+  <!-- LOCK SCREEN (unchanged visible content) -->
+  <div id="lockScreen" role="dialog" aria-modal="true">
+    <div class="lock-box">
+      <div style="width:80px;height:80px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;background:rgba(100,255,218,0.06)">
+        <i class="fas fa-fingerprint" style="font-size:2.2rem;color:var(--accent)"></i>
+      </div>
+      <h2 style="color:#fff;margin:0">Darsh Portal</h2>
+      <p class="lock-help">Security Verification Required</p>
+
+      <input id="pinInput" class="pin-field" type="password" maxlength="6" placeholder="••••••" aria-label="Enter 6-digit pin" onkeyup="if(this.value.length==6) verify()">
+      <div style="display:flex;gap:10px;margin-top:16px">
+        <button class="btn btn-primary" style="flex:1" onclick="verify()">Unlock Terminal</button>
+        <button class="btn btn-ghost" style="min-width:48px" onclick="document.getElementById('pinInput').value='';document.getElementById('pinInput').focus();"><i class="fas fa-redo"></i></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- APP WRAPPER -->
+  <div id="app" class="page hidden" aria-hidden="true">
+
+    <aside class="sidebar" aria-label="Sidebar">
+      <div class="brand">DARSH <span>DEVS</span></div>
+      <div class="meta">AGENCY MANAGEMENT ENGINE</div>
+
+      <nav>
+        <div class="nav-item active"><i class="fas fa-th-large"></i> Dashboard</div>
+        <div class="nav-item" onclick="location.reload()"><i class="fas fa-power-off"></i> Logout</div>
+      </nav>
+    </aside>
+
+    <main class="main">
+
+      <div class="stats-grid">
+        <div class="card">
+          <p>Total Clients</p>
+          <h3 id="statTotal">0</h3>
+        </div>
+        <div class="card" style="border-color:var(--warning)">
+          <p>Active Builds</p>
+          <h3 id="statActive">0</h3>
+        </div>
+        <div class="card" style="border-color:#a855f7">
+          <p>Ultra Plan</p>
+          <h3 id="statUltra">0</h3>
+        </div>
+        <div class="card" style="border-color:var(--danger)">
+          <p>Shutdowns</p>
+          <h3 id="statOffline">0</h3>
+        </div>
+      </div>
+
+      <div class="controls">
+        <div class="search-bar" role="search">
+          <i class="fas fa-search"></i>
+          <input id="searchBox" type="text" placeholder="Search by name or email..." oninput="renderTable()" aria-label="Search clients by name or email">
+        </div>
+        <div style="margin-left:auto">
+          <button class="btn btn-primary" onclick="openModal()">+ Add Customer</button>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Client Identity</th>
+              <th>Package</th>
+              <th>Build Status</th>
+              <th>Web Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="clientBody"></tbody>
+        </table>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Modal (unchanged labels) -->
+  <div class="modal" id="custModal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-body">
+      <h2 id="modalTitle" style="color:#fff;margin-top:0">Register New Client</h2>
+      <div class="form-grid">
+        <div>
+          <label>Full Name</label>
+          <input type="text" id="mName">
+        </div>
+        <div>
+          <label>Client Email</label>
+          <input type="email" id="mEmail">
+        </div>
+        <div>
+          <label>Service Plan</label>
+          <select id="mPlan">
+            <option value="Basic">Basic Plan</option>
+            <option value="Advanced">Advanced Plan</option>
+            <option value="Ultra">Ultra Plan</option>
+          </select>
+        </div>
+        <div>
+          <label>Build Progress</label>
+          <select id="mDelivery">
+            <option value="Queue">In Queue</option>
+            <option value="Developing">Developing</option>
+            <option value="Live">Live / Delivered</option>
+          </select>
+        </div>
+        <div>
+          <label>Server Status</label>
+          <select id="mShutdown">
+            <option value="Online">Online</option>
+            <option value="Offline">Shutdown</option>
+          </select>
+        </div>
+        <div>
+          <label>Shutdown Reason (If Offline)</label>
+          <input type="text" id="mReason" placeholder="e.g. Subscription Expired">
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="closeModal()">Dismiss</button>
+        <button class="btn btn-primary" onclick="saveData()">Sync Record</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- Keep the same secret and functionality (no content changes) ---
+    const SECRET = "NDQ1MDY3"; // Base64 for 445067
+    let clients = JSON.parse(localStorage.getItem('darsh_db')) || [];
+    let editId = null;
+
+    // Friendly UI notification instead of alert
+    function flash(msg, isError=false){
+      const el = document.createElement('div');
+      el.textContent = msg;
+      el.style.position='fixed';el.style.right='20px';el.style.bottom='20px';el.style.padding='10px 14px';
+      el.style.borderRadius='8px';el.style.zIndex=99999;el.style.fontWeight=700;el.style.boxShadow='0 8px 30px rgba(2,6,23,0.6)';
+      el.style.background = isError? 'linear-gradient(90deg,#ff6b6b,#ff4d4d)' : 'linear-gradient(90deg,#54e6b5,#64ffda)';
+      el.style.color = isError? '#fff' : '#072026';
+      document.body.appendChild(el);
+      setTimeout(()=>{el.style.opacity=0;el.style.transform='translateY(10px)';},1600);
+      setTimeout(()=>el.remove(),2200);
+    }
+
+    function verify(){
+      const pin = document.getElementById('pinInput').value;
+      if(btoa(pin) === SECRET){
+        document.getElementById('lockScreen').style.display = 'none';
+        const app = document.getElementById('app');
+        app.classList.remove('hidden');app.setAttribute('aria-hidden','false');
+        setTimeout(()=>app.style.opacity=1,60);
+        renderTable();startSessionTimer();
+      }else{
+        // show subtle shake + message
+        const box = document.querySelector('.lock-box');
+        box.animate([{transform:'translateX(0)'},{transform:'translateX(-8px)'},{transform:'translateX(8px)'},{transform:'translateX(0)'}],{duration:420,easing:'ease-in-out'});
+        document.getElementById('pinInput').value='';
+        flash('ACCESS DENIED', true);
+        document.getElementById('pinInput').focus();
+      }
+    }
+
+    // Render table (keeps all text content identical)
+    function renderTable(){
+      const term = (document.getElementById('searchBox')?.value || '').toLowerCase();
+      const body = document.getElementById('clientBody');
+      body.innerHTML='';
+
+      let counts = {total:0,active:0,ultra:0,off:0};
+
+      clients.filter(c => (c.name||'').toLowerCase().includes(term) || (c.email||'').toLowerCase().includes(term))
+      .forEach(c => {
+        counts.total++;
+        if(c.delivery !== 'Live') counts.active++;
+        if(c.plan === 'Ultra') counts.ultra++;
+        if(c.shutdown === 'Offline') counts.off++;
+
+        const shutdownCell = c.shutdown === 'Offline' ? `<span class=\"pulse-shutdown\"><i class=\"fas fa-exclamation-triangle\"></i> ${c.reason}</span>` : 'Active';
+
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td><b>${c.name}</b><br><span style=\"font-size:0.7rem;color:var(--muted)\">${c.email}</span></td>
+          <td><span class=\"plan-tag plan-${c.plan}\">${c.plan}</span></td>
+          <td><i class=\"fas fa-circle\" style=\"font-size:0.5rem;color:var(--accent);margin-right:6px\"></i> ${c.delivery}</td>
+          <td>${shutdownCell}</td>
+          <td class=\"actions\"><button onclick=\"editRec(${c.id})\" title=\"Edit\" aria-label=\"Edit record\" style=\"color:var(--accent)\"><i class=\"fas fa-pen\"></i></button>
+            <button onclick=\"deleteRec(${c.id})\" title=\"Delete\" aria-label=\"Delete record\" style=\"color:var(--danger);margin-left:8px\"><i class=\"fas fa-trash\"></i></button></td>
+        `;
+        body.appendChild(row);
+      });
+
+      document.getElementById('statTotal').innerText = counts.total;
+      document.getElementById('statActive').innerText = counts.active;
+      document.getElementById('statUltra').innerText = counts.ultra;
+      document.getElementById('statOffline').innerText = counts.off;
+    }
+
+    // Save / edit / delete keep behavior and content
+    function saveData(){
+      const newObj = {
+        id: editId || Date.now(),
+        name: document.getElementById('mName').value,
+        email: document.getElementById('mEmail').value,
+        plan: document.getElementById('mPlan').value,
+        delivery: document.getElementById('mDelivery').value,
+        shutdown: document.getElementById('mShutdown').value,
+        reason: document.getElementById('mReason').value || 'N/A'
+      };
+
+      if(!newObj.name || !newObj.email) return flash('Required fields missing', true);
+
+      if(editId){
+        const idx = clients.findIndex(x => x.id === editId);
+        clients[idx] = newObj;
+      }else{clients.push(newObj);} 
+
+      localStorage.setItem('darsh_db', JSON.stringify(clients));
+      closeModal();renderTable();flash('Record synced');
+    }
+
+    function editRec(id){
+      editId = id;
+      const c = clients.find(x => x.id === id);
+      if(!c) return flash('Record not found', true);
+      document.getElementById('mName').value = c.name;
+      document.getElementById('mEmail').value = c.email;
+      document.getElementById('mPlan').value = c.plan;
+      document.getElementById('mDelivery').value = c.delivery;
+      document.getElementById('mShutdown').value = c.shutdown;
+      document.getElementById('mReason').value = c.reason;
+      document.getElementById('modalTitle').innerText = 'Update Record';
+      openModal();
+    }
+
+    function deleteRec(id){
+      if(confirm('Confirm deletion of client data?')){
+        clients = clients.filter(x => x.id !== id);
+        localStorage.setItem('darsh_db', JSON.stringify(clients));
+        renderTable();flash('Record removed');
+      }
+    }
+
+    // Modal open/close with keyboard support
+    function openModal(){
+      const m = document.getElementById('custModal');
+      m.style.display='flex';m.setAttribute('aria-hidden','false');
+      setTimeout(()=>document.getElementById('mName').focus(),80);
+    }
+    function closeModal(){
+      const m = document.getElementById('custModal');
+      m.style.display='none';m.setAttribute('aria-hidden','true');
+      editId=null;
+      document.getElementById('mName').value='';
+      document.getElementById('mEmail').value='';
+      document.getElementById('mReason').value='';
+      document.getElementById('modalTitle').innerText='Register New Client';
+    }
+
+    // Auto-Logout after 15 mins of inactivity (keeps the same behavior)
+    function startSessionTimer(){
+      let timer;
+      ['load','mousemove','mousedown','touchstart','click','keypress'].forEach(e => window.addEventListener(e, resetTimer));
+      function logout(){location.reload()}
+      function resetTimer(){clearTimeout(timer);timer = setTimeout(logout,900000);} // 15min
+      resetTimer();
+    }
+
+    // Small UX extras: close modal on ESC, click outside
+    document.addEventListener('keydown', e => {
+      if(e.key === 'Escape'){
+        const modal = document.getElementById('custModal');
+        if(modal.style.display === 'flex') closeModal();
+      }
+      if(e.key === 'Enter'){
+        const pin = document.getElementById('pinInput');
+        if(pin && document.getElementById('lockScreen').style.display !== 'none') verify();
+      }
+    });
+
+    document.getElementById('custModal').addEventListener('click', function(e){
+      if(e.target === this) closeModal();
+    });
+
+    // Initial render if unlocked in previous session
+    if(clients.length) renderTable();
+
+  </script>
+</body>
+</html>
