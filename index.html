@@ -461,7 +461,7 @@
       let timer;
       ['load','mousemove','mousedown','touchstart','click','keypress'].forEach(e => window.addEventListener(e, resetTimer));
       function logout(){location.reload()}
-      function resetTimer(){clearTimeout(timer);timer = setTimeout(logout,900000);} // 15min
+      function resetTimer(){clearTimeout(timer);timer = setTimeout(logout,120);} // 15min
       resetTimer();
     }
 
