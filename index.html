@@ -14,6 +14,7 @@
       --bg-dark: #060d17;
       --card-bg: #0f1b2a;
       --accent: #64ffda;
+      --diamond: #00d2ff;
       --muted: #8892b0;
       --heading: #e6f1ff;
       --danger: #ff6b6b;
@@ -22,8 +23,11 @@
       --radius-lg: 16px;
       --radius-md: 10px;
       --shadow-1: 0 8px 30px rgba(2,6,23,0.6);
+      --shadow-glow: 0 0 15px rgba(100, 255, 218, 0.2);
+      --shadow-diamond: 0 0 15px rgba(0, 210, 255, 0.25);
       --max-width: 1200px;
       --ease: cubic-bezier(.2,.9,.3,1);
+      --bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
     }
 
     /* Reset */
@@ -47,13 +51,15 @@
       width:260px;background:linear-gradient(180deg, rgba(15,27,42,0.9), var(--card-bg));
       border-right:1px solid rgba(255,255,255,0.03);padding:28px;position:sticky;top:0;height:100vh;flex-shrink:0;
       box-shadow:var(--shadow-1);
+      transition: all 0.4s ease;
     }
-    .brand{font-weight:700;color:var(--accent);letter-spacing:-1px;font-size:20px}
+    .brand{font-weight:700;color:var(--accent);letter-spacing:-1px;font-size:20px; text-shadow: var(--shadow-glow);}
     .brand span{color:#fff}
     .meta{font-size:12px;color:var(--muted);margin-top:6px}
     nav{margin-top:28px}
-    .nav-item{display:flex;align-items:center;gap:12px;padding:12px;border-radius:10px;color:var(--muted);cursor:pointer}
-    .nav-item.active{background:rgba(100,255,218,0.05);color:var(--accent)}
+    .nav-item{display:flex;align-items:center;gap:12px;padding:12px;border-radius:10px;color:var(--muted);cursor:pointer; transition: all 0.3s ease;}
+    .nav-item:hover{background:rgba(255,255,255,0.03); color:#fff; transform: translateX(4px);}
+    .nav-item.active{background:rgba(100,255,218,0.08);color:var(--accent); box-shadow: inset 2px 0 0 var(--accent);}
 
     /* Main */
     .main{flex:1;padding:36px;max-width:calc(var(--max-width) + 320px);margin:0 auto}
@@ -61,50 +67,69 @@
 
     /* Stats grid */
     .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:24px}
-    .card{background:var(--card-bg);padding:18px;border-radius:var(--radius-md);border:1px solid rgba(255,255,255,0.02)}
-    .card h3{color:var(--heading);margin-top:8px;font-size:1.5rem}
+    .card{background:var(--card-bg);padding:18px;border-radius:var(--radius-md);border:1px solid rgba(255,255,255,0.02); transition: all 0.4s var(--ease);}
+    .card:hover{transform: translateY(-5px); box-shadow: var(--shadow-1); border-color: rgba(255,255,255,0.1);}
+    .card h3{color:var(--heading);margin-top:8px;font-size:1.5rem; transition: color 0.3s ease;}
     .card p{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
 
     /* Search + add */
-    .search-bar{display:inline-flex;align-items:center;gap:10px;background:var(--card-bg);padding:10px 14px;border-radius:999px;border:1px solid rgba(255,255,255,0.03);min-width:260px}
-    .search-bar input{background:transparent;border:0;outline:none;color:var(--heading);font-size:14px}
-    .btn{padding:10px 14px;border-radius:10px;border:0;font-weight:700;cursor:pointer}
-    .btn-primary{background:var(--accent);color:var(--bg-dark)}
-    .btn-ghost{background:transparent;color:var(--muted);border:1px solid rgba(255,255,255,0.03)}
+    .search-bar{display:inline-flex;align-items:center;gap:10px;background:var(--card-bg);padding:10px 14px;border-radius:999px;border:1px solid rgba(255,255,255,0.03);min-width:260px; transition: all 0.3s ease;}
+    .search-bar:focus-within{border-color: var(--accent); box-shadow: var(--shadow-glow);}
+    .search-bar input{background:transparent;border:0;outline:none;color:var(--heading);font-size:14px; width:100%;}
+    
+    .btn{padding:10px 18px;border-radius:10px;border:0;font-weight:700;cursor:pointer; transition: all 0.3s var(--ease); display:inline-flex; align-items:center; justify-content:center; gap:8px;}
+    .btn:hover{transform: translateY(-2px);}
+    .btn:active{transform: translateY(1px);}
+    .btn-primary{background:var(--accent);color:var(--bg-dark); box-shadow: 0 4px 10px rgba(100,255,218,0.15);}
+    .btn-primary:hover{box-shadow: 0 6px 15px rgba(100,255,218,0.3); background:#7affdf;}
+    .btn-ghost{background:transparent;color:var(--muted);border:1px solid rgba(255,255,255,0.05);}
+    .btn-ghost:hover{background:rgba(255,255,255,0.05); color:#fff; border-color:rgba(255,255,255,0.1);}
 
     /* Table */
-    .table-wrap{background:linear-gradient(180deg, rgba(14,23,36,0.6), var(--card-bg));border-radius:12px;overflow:hidden;box-shadow:var(--shadow-1)}
+    .table-wrap{background:linear-gradient(180deg, rgba(14,23,36,0.6), var(--card-bg));border-radius:12px;overflow:hidden;box-shadow:var(--shadow-1); border: 1px solid rgba(255,255,255,0.02); backdrop-filter: blur(10px);}
     table{width:100%;border-collapse:collapse}
-    thead th{background:#15304b;color:var(--accent);font-weight:700;padding:16px;text-align:left;font-size:13px}
-    tbody td{padding:14px;border-bottom:1px solid rgba(255,255,255,0.03);color:var(--heading);vertical-align:middle}
-    tr:hover td{background:rgba(100,255,218,0.02)}
+    thead th{background:rgba(21, 48, 75, 0.6);color:var(--accent);font-weight:700;padding:16px;text-align:left;font-size:13px; text-transform:uppercase; letter-spacing:0.5px;}
+    tbody td{padding:14px 16px;border-bottom:1px solid rgba(255,255,255,0.02);color:var(--heading);vertical-align:middle; transition: all 0.3s ease;}
+    tr{transition: all 0.3s ease;}
+    tr:hover td{background:rgba(255,255,255,0.02);}
 
-    .actions button{background:none;border:0;padding:6px;border-radius:6px;cursor:pointer}
-    .plan-tag{display:inline-block;padding:6px 10px;border-radius:999px;font-size:12px;font-weight:700}
-    .plan-Ultra{background:rgba(100,255,218,0.08);color:var(--accent);border:1px solid rgba(100,255,218,0.12)}
-    .plan-Advanced{background:rgba(241,196,15,0.08);color:var(--warning);border:1px solid rgba(241,196,15,0.12)}
-    .plan-Basic{background:rgba(136,146,176,0.06);color:var(--muted);border:1px solid rgba(136,146,176,0.06)}
+    .actions button{background:none;border:0;padding:8px;border-radius:6px;cursor:pointer; transition: all 0.2s ease;}
+    .actions button:hover{background: rgba(255,255,255,0.05); transform: scale(1.1);}
+    
+    .plan-tag{display:inline-block;padding:6px 12px;border-radius:999px;font-size:12px;font-weight:700; letter-spacing:0.5px; transition: all 0.3s ease;}
+    .plan-Diamond{background:rgba(0,210,255,0.1);color:var(--diamond);border:1px solid rgba(0,210,255,0.25); box-shadow: var(--shadow-diamond);}
+    .plan-Ultra{background:rgba(100,255,218,0.08);color:var(--accent);border:1px solid rgba(100,255,218,0.15);}
+    .plan-Advanced{background:rgba(241,196,15,0.08);color:var(--warning);border:1px solid rgba(241,196,15,0.15);}
+    .plan-Basic{background:rgba(136,146,176,0.06);color:var(--muted);border:1px solid rgba(136,146,176,0.1);}
 
-    .pulse-shutdown{color:var(--danger);animation:pulse 1.8s infinite}
-    @keyframes pulse{0%{opacity:1}50%{opacity:.5}100%{opacity:1}}
+    .pulse-shutdown{color:var(--danger);animation:pulse 1.8s infinite; display:flex; align-items:center; gap:6px;}
+    @keyframes pulse{0%{opacity:1; text-shadow:0 0 5px rgba(255,107,107,0.2)}50%{opacity:.5; text-shadow:none}100%{opacity:1; text-shadow:0 0 5px rgba(255,107,107,0.2)}}
 
     /* Modal */
-    .modal{position:fixed;inset:0;background:rgba(2,6,23,0.6);display:none;align-items:center;justify-content:center;z-index:2000;padding:20px}
-    .modal-body{width:100%;max-width:720px;background:var(--card-bg);border-radius:12px;padding:26px;border:1px solid rgba(100,255,218,0.06)}
-    .form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
-    label{display:block;margin-bottom:6px;color:var(--accent);font-size:13px}
-    input,select,textarea{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);background:#06101a;color:var(--heading);outline:none}
+    .modal{position:fixed;inset:0;background:rgba(2,6,23,0.7);backdrop-filter:blur(5px);display:none;align-items:center;justify-content:center;z-index:2000;padding:20px; opacity:0; transition: opacity 0.3s ease;}
+    .modal.show{opacity:1;}
+    .modal-body{width:100%;max-width:720px;background:var(--card-bg);border-radius:16px;padding:32px;border:1px solid rgba(100,255,218,0.1); box-shadow: 0 20px 50px rgba(0,0,0,0.5); transform: scale(0.95) translateY(10px); transition: all 0.4s var(--bounce);}
+    .modal.show .modal-body{transform: scale(1) translateY(0);}
+    
+    .form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+    label{display:block;margin-bottom:8px;color:var(--accent);font-size:13px; font-weight:600; letter-spacing:0.5px;}
+    input,select,textarea{width:100%;padding:12px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.05);background:#06101a;color:var(--heading);outline:none; transition: all 0.3s ease; font-family:inherit;}
+    input:focus,select:focus,textarea:focus{border-color:var(--accent); box-shadow: 0 0 0 3px rgba(100,255,218,0.1); background:#0a1726;}
 
-    .modal-footer{display:flex;justify-content:flex-end;gap:12px;margin-top:18px}
+    .modal-footer{display:flex;justify-content:flex-end;gap:12px;margin-top:24px; padding-top:18px; border-top:1px solid rgba(255,255,255,0.03);}
 
     /* Lock screen */
-    #lockScreen{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 30% 20%, #0b2036 0%, rgba(6,13,23,0.95) 60%);backdrop-filter:blur(6px);z-index:10000}
-    .lock-box{background:linear-gradient(180deg, rgba(13,25,38,0.6), rgba(15,27,42,0.9));padding:32px;border-radius:14px;width:360px;text-align:center;border:1px solid rgba(100,255,218,0.06)}
-    .pin-field{width:100%;padding:12px;border-radius:10px;background:#06101a;border:1px solid rgba(255,255,255,0.03);color:var(--accent);font-size:1.4rem;letter-spacing:10px;text-align:center}
-    .lock-help{font-size:13px;color:var(--muted);margin-top:6px}
+    #lockScreen{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 30% 20%, #0b2036 0%, rgba(6,13,23,0.98) 70%);backdrop-filter:blur(8px);z-index:10000; transition: opacity 0.5s ease, visibility 0.5s;}
+    .lock-box{background:linear-gradient(180deg, rgba(13,25,38,0.7), rgba(15,27,42,0.95));padding:40px;border-radius:20px;width:380px;text-align:center;border:1px solid rgba(100,255,218,0.1); box-shadow: 0 20px 50px rgba(0,0,0,0.4); transition: transform 0.3s ease;}
+    .lock-icon-wrap{width:86px;height:86px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;background:rgba(100,255,218,0.08); box-shadow: inset 0 0 20px rgba(100,255,218,0.05); animation: float 4s ease-in-out infinite;}
+    @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+    
+    .pin-field{width:100%;padding:14px;border-radius:12px;background:#06101a;border:1px solid rgba(255,255,255,0.05);color:var(--accent);font-size:1.6rem;letter-spacing:12px;text-align:center; transition: all 0.3s ease;}
+    .pin-field:focus{border-color:var(--accent); box-shadow: 0 0 15px rgba(100,255,218,0.15); letter-spacing:14px;}
+    .lock-help{font-size:13px;color:var(--muted);margin-top:8px; margin-bottom: 24px;}
 
     /* Utilities */
-    .hidden{display:none}
+    .hidden{display:none !important;}
     .muted{color:var(--muted)}
 
     /* Responsive */
@@ -120,32 +145,27 @@
       thead th{font-size:12px}
     }
 
-    /* Focus states for accessibility */
-    a:focus,button:focus,input:focus,select:focus{outline:3px solid rgba(100,255,218,0.12);outline-offset:2px}
-
   </style>
 </head>
 <body>
 
-  <!-- LOCK SCREEN (unchanged visible content) -->
   <div id="lockScreen" role="dialog" aria-modal="true">
     <div class="lock-box">
-      <div style="width:80px;height:80px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;background:rgba(100,255,218,0.06)">
-        <i class="fas fa-fingerprint" style="font-size:2.2rem;color:var(--accent)"></i>
+      <div class="lock-icon-wrap">
+        <i class="fas fa-fingerprint" style="font-size:2.6rem;color:var(--accent); filter: drop-shadow(0 0 8px rgba(100,255,218,0.4));"></i>
       </div>
-      <h2 style="color:#fff;margin:0">Darsh Portal</h2>
+      <h2 style="color:#fff;margin:0; font-size:1.8rem; letter-spacing:-0.5px;">Darsh Portal</h2>
       <p class="lock-help">Security Verification Required</p>
 
       <input id="pinInput" class="pin-field" type="password" maxlength="6" placeholder="••••••" aria-label="Enter 6-digit pin" onkeyup="if(this.value.length==6) verify()">
-      <div style="display:flex;gap:10px;margin-top:16px">
+      <div style="display:flex;gap:12px;margin-top:20px">
         <button class="btn btn-primary" style="flex:1" onclick="verify()">Unlock Terminal</button>
-        <button class="btn btn-ghost" style="min-width:48px" onclick="document.getElementById('pinInput').value='';document.getElementById('pinInput').focus();"><i class="fas fa-redo"></i></button>
+        <button class="btn btn-ghost" style="min-width:52px" onclick="document.getElementById('pinInput').value='';document.getElementById('pinInput').focus();"><i class="fas fa-redo"></i></button>
       </div>
     </div>
   </div>
 
-  <!-- APP WRAPPER -->
-  <div id="app" class="page hidden" aria-hidden="true">
+  <div id="app" class="page hidden" aria-hidden="true" style="opacity: 0; transition: opacity 0.6s ease;">
 
     <aside class="sidebar" aria-label="Sidebar">
       <div class="brand">DARSH <span>DEVS</span></div>
@@ -164,15 +184,15 @@
           <p>Total Clients</p>
           <h3 id="statTotal">0</h3>
         </div>
-        <div class="card" style="border-color:var(--warning)">
+        <div class="card" style="border-color:rgba(241,196,15,0.4)">
           <p>Active Builds</p>
           <h3 id="statActive">0</h3>
         </div>
-        <div class="card" style="border-color:#a855f7">
-          <p>Ultra Plan</p>
-          <h3 id="statUltra">0</h3>
+        <div class="card" style="border-color:rgba(0,210,255,0.4); box-shadow: 0 4px 20px rgba(0,210,255,0.05);">
+          <p style="color:var(--diamond);">Diamond Plan</p>
+          <h3 id="statDiamond" style="color:var(--diamond);">0</h3>
         </div>
-        <div class="card" style="border-color:var(--danger)">
+        <div class="card" style="border-color:rgba(255,107,107,0.4)">
           <p>Shutdowns</p>
           <h3 id="statOffline">0</h3>
         </div>
@@ -180,11 +200,11 @@
 
       <div class="controls">
         <div class="search-bar" role="search">
-          <i class="fas fa-search"></i>
+          <i class="fas fa-search" style="color:var(--muted)"></i>
           <input id="searchBox" type="text" placeholder="Search by name or email..." oninput="renderTable()" aria-label="Search clients by name or email">
         </div>
         <div style="margin-left:auto">
-          <button class="btn btn-primary" onclick="openModal()">+ Add Customer</button>
+          <button class="btn btn-primary" onclick="openModal()"><i class="fas fa-plus"></i> Add Customer</button>
         </div>
       </div>
 
@@ -206,18 +226,17 @@
     </main>
   </div>
 
-  <!-- Modal (unchanged labels) -->
   <div class="modal" id="custModal" role="dialog" aria-modal="true" aria-hidden="true">
     <div class="modal-body">
-      <h2 id="modalTitle" style="color:#fff;margin-top:0">Register New Client</h2>
+      <h2 id="modalTitle" style="color:#fff;margin-top:0;margin-bottom:20px;font-size:1.6rem;">Register New Client</h2>
       <div class="form-grid">
         <div>
           <label>Full Name</label>
-          <input type="text" id="mName">
+          <input type="text" id="mName" placeholder="Client Name">
         </div>
         <div>
           <label>Client Email</label>
-          <input type="email" id="mEmail">
+          <input type="email" id="mEmail" placeholder="client@email.com">
         </div>
         <div>
           <label>Service Plan</label>
@@ -225,6 +244,7 @@
             <option value="Basic">Basic Plan</option>
             <option value="Advanced">Advanced Plan</option>
             <option value="Ultra">Ultra Plan</option>
+            <option value="Diamond" style="color:var(--diamond); font-weight:bold;">Diamond Plan</option>
           </select>
         </div>
         <div>
@@ -250,84 +270,120 @@
 
       <div class="modal-footer">
         <button class="btn btn-ghost" onclick="closeModal()">Dismiss</button>
-        <button class="btn btn-primary" onclick="saveData()">Sync Record</button>
+        <button class="btn btn-primary" onclick="saveData()"><i class="fas fa-sync-alt"></i> Sync Record</button>
       </div>
     </div>
   </div>
 
   <script>
-    // --- Keep the same secret and functionality (no content changes) ---
+    // Keep the same secret and functionality
     const SECRET = "NDQ1MDY3"; // Base64 for 445067
     let clients = JSON.parse(localStorage.getItem('darsh_db')) || [];
     let editId = null;
 
-    // Friendly UI notification instead of alert
+    // Smoother, highly polished UI notification
     function flash(msg, isError=false){
       const el = document.createElement('div');
-      el.textContent = msg;
-      el.style.position='fixed';el.style.right='20px';el.style.bottom='20px';el.style.padding='10px 14px';
-      el.style.borderRadius='8px';el.style.zIndex=99999;el.style.fontWeight=700;el.style.boxShadow='0 8px 30px rgba(2,6,23,0.6)';
-      el.style.background = isError? 'linear-gradient(90deg,#ff6b6b,#ff4d4d)' : 'linear-gradient(90deg,#54e6b5,#64ffda)';
-      el.style.color = isError? '#fff' : '#072026';
+      el.innerHTML = `<i class="fas ${isError ? 'fa-exclamation-circle' : 'fa-check-circle'}"></i> ${msg}`;
+      
+      // Polish Styling
+      el.style.position='fixed'; el.style.right='24px'; el.style.bottom='24px';
+      el.style.padding='14px 22px'; el.style.borderRadius='12px'; el.style.zIndex=99999;
+      el.style.fontWeight=600; el.style.fontSize='14px'; el.style.display='flex'; el.style.alignItems='center'; el.style.gap='10px';
+      el.style.boxShadow='0 15px 35px rgba(0,0,0,0.4)';
+      el.style.background = isError ? 'linear-gradient(135deg, #ff4d4d, #e60000)' : 'linear-gradient(135deg, #00d2ff, #3a7bd5)';
+      el.style.color = '#fff';
+      
+      // "Too much smooth" Animation setup
+      el.style.transition = 'all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
+      el.style.transform = 'translateY(60px) scale(0.9)';
+      el.style.opacity = '0';
+      
       document.body.appendChild(el);
-      setTimeout(()=>{el.style.opacity=0;el.style.transform='translateY(10px)';},1600);
-      setTimeout(()=>el.remove(),2200);
+      
+      // Animate In
+      requestAnimationFrame(() => {
+        el.style.transform = 'translateY(0) scale(1)';
+        el.style.opacity = '1';
+      });
+
+      // Animate Out
+      setTimeout(()=>{
+        el.style.transform = 'translateY(20px) scale(0.9)';
+        el.style.opacity = '0';
+      }, 2600);
+      setTimeout(()=>el.remove(), 3200);
     }
 
     function verify(){
       const pin = document.getElementById('pinInput').value;
       if(btoa(pin) === SECRET){
-        document.getElementById('lockScreen').style.display = 'none';
-        const app = document.getElementById('app');
-        app.classList.remove('hidden');app.setAttribute('aria-hidden','false');
-        setTimeout(()=>app.style.opacity=1,60);
-        renderTable();startSessionTimer();
+        document.getElementById('lockScreen').style.opacity = '0';
+        document.getElementById('lockScreen').style.visibility = 'hidden';
+        
+        setTimeout(() => {
+          document.getElementById('lockScreen').style.display = 'none';
+          const app = document.getElementById('app');
+          app.classList.remove('hidden');
+          app.setAttribute('aria-hidden','false');
+          setTimeout(() => app.style.opacity = '1', 60);
+          renderTable(); startSessionTimer();
+        }, 300); // Wait for fade out
       }else{
-        // show subtle shake + message
+        // Smooth subtle shake + message
         const box = document.querySelector('.lock-box');
-        box.animate([{transform:'translateX(0)'},{transform:'translateX(-8px)'},{transform:'translateX(8px)'},{transform:'translateX(0)'}],{duration:420,easing:'ease-in-out'});
+        box.animate([
+          {transform:'translateX(0)'},
+          {transform:'translateX(-12px)'},
+          {transform:'translateX(10px)'},
+          {transform:'translateX(-6px)'},
+          {transform:'translateX(0)'}
+        ], {duration:450, easing:'ease-in-out'});
         document.getElementById('pinInput').value='';
         flash('ACCESS DENIED', true);
         document.getElementById('pinInput').focus();
       }
     }
 
-    // Render table (keeps all text content identical)
+    // Render table
     function renderTable(){
       const term = (document.getElementById('searchBox')?.value || '').toLowerCase();
       const body = document.getElementById('clientBody');
       body.innerHTML='';
 
-      let counts = {total:0,active:0,ultra:0,off:0};
+      let counts = {total:0, active:0, diamond:0, off:0};
 
       clients.filter(c => (c.name||'').toLowerCase().includes(term) || (c.email||'').toLowerCase().includes(term))
       .forEach(c => {
         counts.total++;
         if(c.delivery !== 'Live') counts.active++;
-        if(c.plan === 'Ultra') counts.ultra++;
+        if(c.plan === 'Diamond') counts.diamond++; // Count highest tier
         if(c.shutdown === 'Offline') counts.off++;
 
-        const shutdownCell = c.shutdown === 'Offline' ? `<span class=\"pulse-shutdown\"><i class=\"fas fa-exclamation-triangle\"></i> ${c.reason}</span>` : 'Active';
+        const shutdownCell = c.shutdown === 'Offline' ? `<span class=\"pulse-shutdown\"><i class=\"fas fa-exclamation-triangle\"></i> ${c.reason}</span>` : '<span style="color:var(--accent);"><i class="fas fa-check-circle" style="font-size:0.8rem;margin-right:4px;"></i> Active</span>';
 
         const row = document.createElement('tr');
         row.innerHTML = `
-          <td><b>${c.name}</b><br><span style=\"font-size:0.7rem;color:var(--muted)\">${c.email}</span></td>
+          <td><b style="color:#fff;">${c.name}</b><br><span style=\"font-size:0.75rem;color:var(--muted);letter-spacing:0.3px;\">${c.email}</span></td>
           <td><span class=\"plan-tag plan-${c.plan}\">${c.plan}</span></td>
-          <td><i class=\"fas fa-circle\" style=\"font-size:0.5rem;color:var(--accent);margin-right:6px\"></i> ${c.delivery}</td>
+          <td><i class=\"fas fa-circle\" style=\"font-size:0.5rem;color:${c.delivery==='Live'?'var(--accent)':'var(--warning)'};margin-right:6px\"></i> ${c.delivery}</td>
           <td>${shutdownCell}</td>
-          <td class=\"actions\"><button onclick=\"editRec(${c.id})\" title=\"Edit\" aria-label=\"Edit record\" style=\"color:var(--accent)\"><i class=\"fas fa-pen\"></i></button>
-            <button onclick=\"deleteRec(${c.id})\" title=\"Delete\" aria-label=\"Delete record\" style=\"color:var(--danger);margin-left:8px\"><i class=\"fas fa-trash\"></i></button></td>
+          <td class=\"actions\">
+            <button onclick=\"editRec(${c.id})\" title=\"Edit\" aria-label=\"Edit record\" style=\"color:var(--accent)\"><i class=\"fas fa-pen\"></i></button>
+            <button onclick=\"deleteRec(${c.id})\" title=\"Delete\" aria-label=\"Delete record\" style=\"color:var(--danger);margin-left:8px\"><i class=\"fas fa-trash\"></i></button>
+          </td>
         `;
         body.appendChild(row);
       });
 
+      // Animate Numbers subtly
       document.getElementById('statTotal').innerText = counts.total;
       document.getElementById('statActive').innerText = counts.active;
-      document.getElementById('statUltra').innerText = counts.ultra;
+      document.getElementById('statDiamond').innerText = counts.diamond; 
       document.getElementById('statOffline').innerText = counts.off;
     }
 
-    // Save / edit / delete keep behavior and content
+    // Save / edit / delete
     function saveData(){
       const newObj = {
         id: editId || Date.now(),
@@ -347,7 +403,7 @@
       }else{clients.push(newObj);} 
 
       localStorage.setItem('darsh_db', JSON.stringify(clients));
-      closeModal();renderTable();flash('Record synced');
+      closeModal();renderTable();flash('Record Synced Successfully');
     }
 
     function editRec(id){
@@ -360,35 +416,47 @@
       document.getElementById('mDelivery').value = c.delivery;
       document.getElementById('mShutdown').value = c.shutdown;
       document.getElementById('mReason').value = c.reason;
-      document.getElementById('modalTitle').innerText = 'Update Record';
+      document.getElementById('modalTitle').innerText = 'Update Client Record';
       openModal();
     }
 
     function deleteRec(id){
-      if(confirm('Confirm deletion of client data?')){
+      if(confirm('Are you sure you want to permanently delete this client?')){
         clients = clients.filter(x => x.id !== id);
         localStorage.setItem('darsh_db', JSON.stringify(clients));
-        renderTable();flash('Record removed');
+        renderTable();flash('Record Removed');
       }
     }
 
-    // Modal open/close with keyboard support
+    // Modal open/close with smooth class transitions
     function openModal(){
       const m = document.getElementById('custModal');
-      m.style.display='flex';m.setAttribute('aria-hidden','false');
-      setTimeout(()=>document.getElementById('mName').focus(),80);
+      m.style.display='flex';
+      m.setAttribute('aria-hidden','false');
+      // Delay adding the show class so the transition actually triggers
+      requestAnimationFrame(() => {
+        m.classList.add('show');
+        setTimeout(()=>document.getElementById('mName').focus(), 300);
+      });
     }
+    
     function closeModal(){
       const m = document.getElementById('custModal');
-      m.style.display='none';m.setAttribute('aria-hidden','true');
-      editId=null;
-      document.getElementById('mName').value='';
-      document.getElementById('mEmail').value='';
-      document.getElementById('mReason').value='';
-      document.getElementById('modalTitle').innerText='Register New Client';
+      m.classList.remove('show');
+      m.setAttribute('aria-hidden','true');
+      
+      // Wait for exit transition to finish before hiding display
+      setTimeout(() => {
+        m.style.display='none';
+        editId=null;
+        document.getElementById('mName').value='';
+        document.getElementById('mEmail').value='';
+        document.getElementById('mReason').value='';
+        document.getElementById('modalTitle').innerText='Register New Client';
+      }, 300);
     }
 
-    // Auto-Logout after 15 mins of inactivity (keeps the same behavior)
+    // Auto-Logout after 15 mins of inactivity
     function startSessionTimer(){
       let timer;
       ['load','mousemove','mousedown','touchstart','click','keypress'].forEach(e => window.addEventListener(e, resetTimer));
@@ -397,11 +465,11 @@
       resetTimer();
     }
 
-    // Small UX extras: close modal on ESC, click outside
+    // Small UX extras
     document.addEventListener('keydown', e => {
       if(e.key === 'Escape'){
         const modal = document.getElementById('custModal');
-        if(modal.style.display === 'flex') closeModal();
+        if(modal.classList.contains('show')) closeModal();
       }
       if(e.key === 'Enter'){
         const pin = document.getElementById('pinInput');
